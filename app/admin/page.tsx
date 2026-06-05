@@ -7,13 +7,13 @@ import { Button } from '@/components/ui/button';
 import { createClient } from '@/lib/supabase/client';
 import type { Game } from '@/lib/types';
 
-const STATUS_MAP: Record<string, { label: string; color: string }> = {
-  lobby:    { label: 'לובי',    color: 'text-ps-blue   border-ps-blue/40   bg-ps-blue/8'    },
-  question: { label: 'שאלה',   color: 'text-[#7C3AED] border-[#7C3AED]/40 bg-[#7C3AED]/8'  },
-  timer:    { label: 'טיימר',  color: 'text-game-gold  border-game-gold/40  bg-game-gold/8'  },
-  results:  { label: 'תוצאות', color: 'text-game-amber border-game-amber/40 bg-game-amber/8' },
-  answer:   { label: 'תשובה',  color: 'text-game-green border-game-green/40 bg-game-green/8' },
-  finished: { label: 'הסתיים', color: 'text-app-muted  border-app-border    bg-app-bg'       },
+const STATUS_MAP: Record<string, { label: string; color: string; dot: string }> = {
+  lobby:    { label: 'לובי',    color: 'text-ps-blue   bg-ps-blue/10',   dot: 'bg-ps-blue'   },
+  question: { label: 'שאלה',   color: 'text-[#7C3AED] bg-[#7C3AED]/10', dot: 'bg-[#7C3AED]' },
+  timer:    { label: 'טיימר',  color: 'text-game-gold  bg-game-gold/10',  dot: 'bg-game-gold'  },
+  results:  { label: 'תוצאות', color: 'text-game-amber bg-game-amber/10', dot: 'bg-game-amber' },
+  answer:   { label: 'תשובה',  color: 'text-game-green bg-game-green/10', dot: 'bg-game-green' },
+  finished: { label: 'הסתיים', color: 'text-app-muted  bg-app-border/50', dot: 'bg-app-muted'  },
 };
 
 export default function AdminPage() {
@@ -60,25 +60,23 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-dvh bg-app-bg" dir="rtl">
+      <div className="h-1.5 bg-ps-blue w-full" />
       <div className="max-w-2xl mx-auto px-4 py-6 flex flex-col gap-6">
 
         {/* Header */}
-        <div className="flex items-center justify-between pt-safe">
+        <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-black text-app-text">לוח ניהול</h1>
-            <p className="text-app-muted text-sm mt-0.5">האחוזון העליון</p>
+            <h1 className="text-2xl font-black text-app-text">לוח ניהול</h1>
+            <p className="text-app-muted text-sm">האחוזון העליון</p>
           </div>
-          <div className="flex items-center gap-2 flex-wrap justify-end">
+          <div className="flex items-center gap-2">
             <Link href="/projector">
               <Button variant="outline" size="sm">🖥️ פרויקטור</Button>
             </Link>
             <Button onClick={handleCreateGame} disabled={creating} variant="gold" size="sm">
-              {creating ? '...' : '+ חדש'}
+              {creating ? 'יוצר...' : '+ משחק חדש'}
             </Button>
-            <button
-              onClick={handleLogout}
-              className="text-app-muted text-xs hover:text-app-text transition-colors px-2 py-2"
-            >
+            <button onClick={handleLogout} className="text-app-muted text-xs hover:text-app-text px-2 py-2 transition-colors">
               יציאה
             </button>
           </div>
@@ -98,10 +96,10 @@ export default function AdminPage() {
             </Button>
           </div>
         ) : (
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-4">
             <AnimatePresence>
               {games.map((game, idx) => {
-                const s = STATUS_MAP[game.status] ?? { label: game.status, color: 'text-app-muted border-app-border bg-app-bg' };
+                const s = STATUS_MAP[game.status] ?? { label: game.status, color: 'text-app-muted bg-app-border/50', dot: 'bg-app-muted' };
                 const isDeleting = deletingId === game.id;
                 const isConfirming = confirmId === game.id;
 
@@ -110,74 +108,62 @@ export default function AdminPage() {
                     key={game.id}
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: isDeleting ? 0.4 : 1, y: 0 }}
-                    exit={{ opacity: 0, x: 40, transition: { duration: 0.2 } }}
-                    transition={{ delay: idx * 0.03 }}
-                    className="rounded-2xl bg-app-surface border border-app-border card-shadow overflow-hidden"
+                    exit={{ opacity: 0, height: 0, marginBottom: 0, transition: { duration: 0.25 } }}
+                    transition={{ delay: idx * 0.04 }}
+                    className="bg-app-surface rounded-2xl border border-app-border card-shadow overflow-hidden"
                   >
-                    {/* Main row */}
-                    <div className="flex items-center justify-between p-4">
-                      <div className="flex flex-col gap-1.5 min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full border shrink-0 ${s.color}`}>
-                            {s.label}
-                          </span>
-                          <span className="text-app-muted font-mono text-xs">{game.id.slice(0, 8)}</span>
-                        </div>
-                        <span className="text-app-muted/60 text-xs">
-                          {new Date(game.created_at).toLocaleString('he-IL')}
-                        </span>
-                      </div>
-
-                      <div className="flex gap-2 shrink-0">
-                        <Link href={`/admin/questions?gameId=${game.id}`}>
-                          <Button variant="ghost" size="sm">📝 שאלות</Button>
-                        </Link>
-                        {game.status !== 'finished' && (
-                          <Link href={`/projector?gameId=${game.id}`}>
-                            <Button variant="primary" size="sm">▶ נהל</Button>
-                          </Link>
-                        )}
-                        <button
-                          onClick={() => setConfirmId(isConfirming ? null : game.id)}
-                          disabled={isDeleting}
-                          className="h-9 px-3 flex items-center gap-1.5 rounded-lg border border-game-red/30 text-game-red text-sm font-medium hover:bg-game-red/8 transition-all disabled:opacity-40"
-                        >
-                          🗑️ מחק
-                        </button>
-                      </div>
+                    {/* Status bar */}
+                    <div className={`flex items-center gap-2 px-4 py-2.5 border-b border-app-border/60`}>
+                      <div className={`w-2 h-2 rounded-full shrink-0 ${s.dot}`} />
+                      <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${s.color}`}>{s.label}</span>
+                      <span className="text-app-muted/50 font-mono text-xs mr-auto">{game.id.slice(0, 8)}</span>
+                      <span className="text-app-muted/50 text-xs">{new Date(game.created_at).toLocaleDateString('he-IL')}</span>
                     </div>
 
-                    {/* Confirm delete */}
-                    <AnimatePresence>
-                      {isConfirming && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: 'auto', opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.2 }}
-                          className="overflow-hidden"
-                        >
-                          <div className="flex items-center justify-between px-4 py-3 bg-game-red/5 border-t border-game-red/15">
-                            <p className="text-game-red text-sm font-medium">למחוק את המשחק? הפעולה בלתי הפיכה.</p>
-                            <div className="flex gap-2 shrink-0">
-                              <button
-                                onClick={() => setConfirmId(null)}
-                                className="h-8 px-3 rounded-lg text-app-muted text-sm hover:text-app-text transition-colors"
-                              >
-                                ביטול
-                              </button>
-                              <button
-                                onClick={() => handleDelete(game.id)}
-                                disabled={isDeleting}
-                                className="h-8 px-3 rounded-lg bg-game-red text-white text-sm font-semibold hover:brightness-110 transition-all disabled:opacity-50"
-                              >
-                                {isDeleting ? '...' : 'מחק'}
-                              </button>
-                            </div>
-                          </div>
-                        </motion.div>
+                    {/* Actions */}
+                    <div className="flex items-center gap-2 p-3">
+                      <Link href={`/admin/questions?gameId=${game.id}`} className="flex-1">
+                        <Button variant="outline" size="sm" className="w-full">📝 שאלות</Button>
+                      </Link>
+                      {game.status !== 'finished' && (
+                        <Link href={`/admin/game?gameId=${game.id}`} className="flex-1">
+                          <Button variant="primary" size="sm" className="w-full">🎮 שלוט במשחק</Button>
+                        </Link>
                       )}
-                    </AnimatePresence>
+                    </div>
+
+                    {/* Delete section — always visible */}
+                    <div className="border-t border-app-border/60">
+                      {!isConfirming ? (
+                        <button
+                          onClick={() => setConfirmId(game.id)}
+                          disabled={isDeleting}
+                          className="w-full px-4 py-2.5 flex items-center gap-2 text-game-red text-sm font-medium hover:bg-game-red/5 transition-colors disabled:opacity-40"
+                        >
+                          <span className="text-base">🗑️</span>
+                          <span>מחק משחק זה</span>
+                        </button>
+                      ) : (
+                        <div className="flex items-center justify-between px-4 py-2.5 bg-game-red/5">
+                          <span className="text-game-red text-sm font-semibold">למחוק? הפעולה בלתי הפיכה</span>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => setConfirmId(null)}
+                              className="px-3 h-8 rounded-lg text-app-muted text-sm hover:text-app-text transition-colors"
+                            >
+                              ביטול
+                            </button>
+                            <button
+                              onClick={() => handleDelete(game.id)}
+                              disabled={isDeleting}
+                              className="px-4 h-8 rounded-lg bg-game-red text-white text-sm font-bold hover:brightness-105 transition-all disabled:opacity-50"
+                            >
+                              {isDeleting ? '...' : 'כן, מחק'}
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </motion.div>
                 );
               })}

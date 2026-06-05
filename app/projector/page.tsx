@@ -3,7 +3,7 @@
 import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useActiveGame } from '@/hooks/useGameState';
-import { AdminController } from '@/components/admin/AdminController';
+import { ProjectorView } from '@/components/projector/ProjectorView';
 import Link from 'next/link';
 
 function ProjectorInner() {
@@ -38,7 +38,7 @@ function ProjectorInner() {
 
   return (
     <div className="min-h-screen projector-page" dir="rtl">
-      <AdminController gameId={gameId} />
+      <ProjectorView gameId={gameId} />
     </div>
   );
 }
