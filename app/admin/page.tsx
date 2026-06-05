@@ -128,22 +128,21 @@ export default function AdminPage() {
                         </span>
                       </div>
 
-                      <div className="flex gap-2 shrink-0 mr-2">
+                      <div className="flex gap-2 shrink-0">
                         <Link href={`/admin/questions?gameId=${game.id}`}>
-                          <Button variant="ghost" size="sm">📝</Button>
+                          <Button variant="ghost" size="sm">📝 שאלות</Button>
                         </Link>
                         {game.status !== 'finished' && (
                           <Link href={`/projector?gameId=${game.id}`}>
-                            <Button variant="primary" size="sm">▶</Button>
+                            <Button variant="primary" size="sm">▶ נהל</Button>
                           </Link>
                         )}
                         <button
                           onClick={() => setConfirmId(isConfirming ? null : game.id)}
                           disabled={isDeleting}
-                          className="h-9 w-9 flex items-center justify-center rounded-lg text-app-muted hover:text-game-red hover:bg-game-red/8 transition-all disabled:opacity-40"
-                          title="מחק משחק"
+                          className="h-9 px-3 flex items-center gap-1.5 rounded-lg border border-game-red/30 text-game-red text-sm font-medium hover:bg-game-red/8 transition-all disabled:opacity-40"
                         >
-                          🗑️
+                          🗑️ מחק
                         </button>
                       </div>
                     </div>
