@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+@theme {
+  /* ── Light app palette ── */
+  --color-app-bg:           #F0F4FA;
+  --color-app-surface:      #FFFFFF;
+  --color-app-border:       #DDE4EF;
+  --color-app-text:         #0A1628;
+  --color-app-muted:        #5A7087;
+
+  /* ── PlayStation Blue system ── */
+  --color-ps-dark:          #00174F;
+  --color-ps-deep:          #002C8A;
+  --color-ps-blue:          #0050E6;
+  --color-ps-mid:           #1A6CF5;
+  --color-ps-light:         #5B9BFF;
+  --color-ps-subtle:        #EBF2FF;
+  --color-ps-card:          rgba(255,255,255,0.08);
+  --color-ps-border:        rgba(255,255,255,0.14);
+  --color-ps-text:          #FFFFFF;
+  --color-ps-muted:         #94A8C4;
+
+  /* ── Projector screen bg ── */
+  --color-proj-bg:          #001240;
+
+  /* ── Semantic game colors ── */
+  --color-game-gold:        #C88B00;
+  --color-game-gold-light:  #FEF3C7;
+  --color-game-green:       #047857;
+  --color-game-green-light: #D1FAE5;
+  --color-game-red:         #C81400;
+  --color-game-red-light:   #FEE2E2;
+  --color-game-amber:       #B45309;
+  --color-game-amber-light: #FEF3C7;
+
+  /* ── Animations ── */
+  --animate-shimmer: shimmer 2.4s ease-in-out infinite;
+  --animate-pulse-ring: pulse-ring 2s ease-out infinite;
+
+  @keyframes shimmer {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.65; }
+  }
+  @keyframes pulse-ring {
+    0%   { transform: scale(1);   opacity: 0.7; }
+    100% { transform: scale(1.8); opacity: 0;   }
+  }
+}
+
+/* ── Base ── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  background: #F0F4FA;
+  color: #0A1628;
+  font-family: -apple-system, 'Segoe UI', 'Arial Hebrew', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar       { width: 4px; }
+::-webkit-scrollbar-track { background: #F0F4FA; }
+::-webkit-scrollbar-thumb { background: #DDE4EF; border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: #0050E6; }
+
+/* ── Projector screen (dark blue bg) ── */
+.projector-page {
+  background: #001240;
+  background-image:
+    radial-gradient(ellipse at 50% -10%, rgba(0,80,230,0.35) 0%, transparent 60%),
+    radial-gradient(ellipse at 100% 100%, rgba(0,44,138,0.4) 0%, transparent 50%);
+}
+
+/* ── Card shadows ── */
+@utility card-shadow { box-shadow: 0 1px 3px rgba(10,22,40,0.06), 0 4px 16px rgba(10,22,40,0.07); }
+@utility card-shadow-lg { box-shadow: 0 2px 8px rgba(10,22,40,0.08), 0 12px 40px rgba(10,22,40,0.1); }
+
+/* ── Prevent iOS zoom ── */
+@media (max-width: 768px) {
+  input, select, textarea { font-size: 16px !important; }
+}
