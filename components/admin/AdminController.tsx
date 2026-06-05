@@ -61,20 +61,20 @@ export function AdminController({ gameId }: AdminControllerProps) {
     <div className="flex flex-col h-screen overflow-hidden" dir="rtl">
 
       {/* ── Top bar ── */}
-      <header className="flex items-center justify-between px-6 py-3 border-b border-ps-border shrink-0 bg-white/5 backdrop-blur-sm">
-        <div className="flex items-center gap-3">
-          <span className="text-xl font-black text-game-gold">האחוזון העליון</span>
+      <header className="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-ps-border shrink-0 bg-white/5 backdrop-blur-sm">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+          <span className="text-base sm:text-xl font-black text-game-gold truncate">האחוזון העליון</span>
           <StatusBadge status={game.status} />
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 sm:gap-4 shrink-0">
           {game.status === 'timer' && question && (
             <TimerDisplay deadline={game.timer_deadline} size="sm" />
           )}
           <div className="text-right">
-            <div className="text-ps-muted text-xs">שחקנים פעילים</div>
+            <div className="text-ps-muted text-xs">פעילים</div>
             <div className="text-game-green font-black text-lg leading-tight">
               {activePlayers.length}
-              <span className="text-ps-muted text-sm font-normal"> / {players.length}</span>
+              <span className="text-ps-muted text-sm font-normal">/{players.length}</span>
             </div>
           </div>
         </div>
@@ -238,42 +238,55 @@ function LobbyScreen({ gameId, players, onStart, busy }: {
   const joinUrl = typeof window !== 'undefined' ? `${window.location.origin}/play` : '/play';
 
   return (
-    <div className="flex flex-col items-center gap-10 max-w-2xl mx-auto">
+    <div className="flex flex-col items-center gap-8 max-w-3xl mx-auto">
 
       {/* Hero */}
       <div className="text-center">
         <motion.h1
-          className="text-7xl font-black text-game-gold leading-tight"
-          animate={{ opacity: [0.85, 1, 0.85] }}
+          className="text-6xl sm:text-8xl font-black text-game-gold leading-none tracking-tight"
+          animate={{ opacity: [0.88, 1, 0.88] }}
           transition={{ repeat: Infinity, duration: 3 }}
         >
-          האחוזון
-          <br />
-          העליון
+          האחוזון העליון
         </motion.h1>
-        <p className="text-ps-muted text-lg mt-2 font-medium">The 1% Club</p>
+        <p className="text-ps-muted text-base sm:text-xl mt-3 font-medium tracking-widest uppercase">The 1% Club</p>
       </div>
 
-      {/* Join URL card */}
-      <div className="w-full rounded-2xl bg-ps-blue/15 border border-ps-blue/30 p-6 text-center">
-        <p className="text-ps-muted text-sm mb-1">הצטרפו דרך הנייד</p>
-        <p className="text-ps-light font-mono text-2xl font-bold">{joinUrl}</p>
+      {/* Join URL — prominent box */}
+      <div className="w-full rounded-2xl border-2 border-ps-blue/40 bg-ps-blue/10 overflow-hidden">
+        <div className="bg-ps-blue/20 px-6 py-2 text-center border-b border-ps-blue/30">
+          <p className="text-ps-muted text-xs font-semibold tracking-wider uppercase">הצטרפו דרך הנייד</p>
+        </div>
+        <div className="px-6 py-5 text-center">
+          <p className="text-ps-light font-mono text-2xl sm:text-3xl font-bold tracking-tight">{joinUrl}</p>
+        </div>
       </div>
 
-      {/* Player count + grid */}
+      {/* Players section */}
       <div className="w-full flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <h3 className="text-white font-bold text-lg">שחקנים מחוברים</h3>
-          <motion.span key={players.length} initial={{ scale: 1.4 }} animate={{ scale: 1 }}
-            className="text-game-green font-black text-2xl">
-            {players.length}
-          </motion.span>
+          <motion.div
+            key={players.length}
+            initial={{ scale: 1.4 }}
+            animate={{ scale: 1 }}
+            className="flex items-baseline gap-1"
+          >
+            <span className="text-game-green font-black text-3xl">{players.length}</span>
+            <span className="text-ps-muted text-sm">שחקנים</span>
+          </motion.div>
         </div>
-        <div className="flex flex-wrap gap-2 min-h-16 max-h-48 overflow-y-auto">
+
+        <div className="flex flex-wrap gap-2 min-h-16 max-h-56 overflow-y-auto rounded-xl bg-white/4 border border-ps-border p-3">
           <AnimatePresence>
             {players.map(p => (
-              <motion.span key={p.id} initial={{ opacity: 0, scale: 0.7 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.7 }}
-                className="px-3 py-1.5 rounded-full bg-ps-card border border-ps-border text-white text-sm font-medium">
+              <motion.span
+                key={p.id}
+                initial={{ opacity: 0, scale: 0.7 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.7 }}
+                className="px-3 py-1.5 rounded-full bg-ps-card border border-ps-border text-white text-sm font-medium"
+              >
                 {p.nickname}
               </motion.span>
             ))}
@@ -290,7 +303,7 @@ function LobbyScreen({ gameId, players, onStart, busy }: {
         disabled={busy || players.length === 0}
         size="xl"
         variant="gold"
-        className="text-xl px-16 font-black"
+        className="text-xl sm:text-2xl px-16 font-black w-full sm:w-auto"
       >
         ▶ התחל משחק
       </Button>

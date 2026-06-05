@@ -33,64 +33,70 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen bg-app-bg flex items-center justify-center px-4" dir="rtl">
-      <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="w-full max-w-sm"
-      >
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-ps-blue/10 border border-ps-blue/20 mb-4">
-            <span className="text-3xl">🏆</span>
-          </div>
-          <h1 className="text-3xl font-black text-app-text">האחוזון העליון</h1>
-          <p className="text-app-muted text-sm mt-1">כניסה לממשק הניהול</p>
-        </div>
+    <div className="min-h-dvh bg-app-bg flex flex-col px-safe" dir="rtl">
+      <div className="h-1.5 bg-ps-blue w-full shrink-0" />
 
-        {/* Card */}
-        <div className="bg-app-surface border border-app-border rounded-2xl card-shadow p-8">
-          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-            <div className="flex flex-col gap-2">
-              <label className="text-sm font-semibold text-app-text">סיסמת מנהל</label>
-              <input
-                type="password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                placeholder="הכנס סיסמה..."
-                autoFocus
-                dir="rtl"
-                className="h-12 w-full rounded-xl border border-app-border bg-app-bg text-app-text px-4 text-base placeholder:text-app-muted/60 focus:outline-none focus:border-ps-blue focus:ring-2 focus:ring-ps-blue/20 transition-all text-right"
-              />
-              {error && (
-                <motion.p
-                  initial={{ opacity: 0, x: -8 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="text-game-red text-sm"
-                >
-                  {error}
-                </motion.p>
-              )}
+      <div className="flex-1 flex items-center justify-center py-8">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="w-full max-w-sm"
+        >
+          {/* Logo */}
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-ps-blue/10 border-2 border-ps-blue/20 mb-4">
+              <span className="text-3xl">🏆</span>
             </div>
+            <h1 className="text-3xl font-black text-app-text">האחוזון העליון</h1>
+            <p className="text-app-muted text-sm mt-1">כניסה לממשק הניהול</p>
+          </div>
 
-            <button
-              type="submit"
-              disabled={loading || !password}
-              className="h-12 w-full rounded-xl bg-ps-blue text-white font-bold text-base hover:bg-ps-mid transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-[0_1px_3px_rgba(0,80,230,0.3),0_4px_12px_rgba(0,80,230,0.2)] active:scale-[0.98]"
-            >
-              {loading ? 'מתחבר...' : 'כניסה'}
-            </button>
-          </form>
-        </div>
-      </motion.div>
+          {/* Card */}
+          <div className="bg-app-surface border border-app-border rounded-2xl card-shadow-lg p-8">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+              <div className="flex flex-col gap-2">
+                <label className="text-sm font-bold text-app-text">סיסמת מנהל</label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  placeholder="הכנס סיסמה..."
+                  autoFocus
+                  dir="rtl"
+                  className="h-14 w-full rounded-xl border-2 border-app-border bg-app-bg text-app-text px-4 text-lg placeholder:text-app-muted/50 focus:outline-none focus:border-ps-blue focus:ring-2 focus:ring-ps-blue/15 transition-all text-right"
+                />
+                {error && (
+                  <motion.p
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className="text-game-red text-sm font-medium"
+                  >
+                    ⚠️ {error}
+                  </motion.p>
+                )}
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading || !password}
+                className="h-14 w-full rounded-xl bg-ps-blue text-white font-bold text-lg hover:bg-ps-mid transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-[0_2px_8px_rgba(0,80,230,0.35)] active:scale-[0.98]"
+              >
+                {loading ? 'מתחבר...' : 'כניסה'}
+              </button>
+            </form>
+          </div>
+        </motion.div>
+      </div>
+
+      <div className="pb-safe shrink-0" />
     </div>
   );
 }
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-app-bg" />}>
+    <Suspense fallback={<div className="min-h-dvh bg-app-bg" />}>
       <LoginForm />
     </Suspense>
   );

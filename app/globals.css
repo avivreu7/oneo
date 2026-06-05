@@ -50,12 +50,37 @@
 /* ── Base ── */
 *, *::before, *::after { box-sizing: border-box; }
 
+html {
+  /* Dynamic viewport height for iOS Safari */
+  height: -webkit-fill-available;
+}
+
 html, body {
   background: #F0F4FA;
   color: #0A1628;
   font-family: -apple-system, 'Segoe UI', 'Arial Hebrew', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
+  /* Prevent bounce scroll showing wrong bg */
+  overscroll-behavior: none;
+}
+
+/* ── Mobile viewport fix ── */
+.min-h-dvh {
+  min-height: 100dvh;
+  min-height: -webkit-fill-available;
+}
+
+/* ── Safe area utilities ── */
+@utility pt-safe {
+  padding-top: max(1.25rem, env(safe-area-inset-top));
+}
+@utility pb-safe {
+  padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+}
+@utility px-safe {
+  padding-left: max(1.25rem, env(safe-area-inset-left));
+  padding-right: max(1.25rem, env(safe-area-inset-right));
 }
 
 /* ── Scrollbar ── */
@@ -73,10 +98,13 @@ html, body {
 }
 
 /* ── Card shadows ── */
-@utility card-shadow { box-shadow: 0 1px 3px rgba(10,22,40,0.06), 0 4px 16px rgba(10,22,40,0.07); }
+@utility card-shadow    { box-shadow: 0 1px 3px rgba(10,22,40,0.06), 0 4px 16px rgba(10,22,40,0.07); }
 @utility card-shadow-lg { box-shadow: 0 2px 8px rgba(10,22,40,0.08), 0 12px 40px rgba(10,22,40,0.1); }
 
-/* ── Prevent iOS zoom ── */
+/* ── Prevent iOS zoom on inputs ── */
 @media (max-width: 768px) {
   input, select, textarea { font-size: 16px !important; }
 }
+
+/* ── Touch-action for buttons ── */
+button, a { touch-action: manipulation; }
