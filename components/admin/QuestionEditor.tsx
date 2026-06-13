@@ -17,8 +17,12 @@ interface QuestionEditorProps {
 }
 
 export function QuestionEditor({ gameId, question, usedOrderIndexes, onSave, onCancel }: QuestionEditorProps) {
+  // For a NEW question default to the first FREE order_index (not always 1),
+  // so saving can never collide with — and silently overwrite — an existing one.
+  const firstFreeIndex = [1,2,3,4,5,6,7,8,9,10].find(i => !usedOrderIndexes.includes(i)) ?? 1;
+
   const [form, setForm] = useState({
-    order_index: question?.order_index ?? 1,
+    order_index: question?.order_index ?? firstFreeIndex,
     difficulty_percent: question?.difficulty_percent ?? 90,
     question_text: question?.question_text ?? '',
     option_a: question?.option_a ?? '',
