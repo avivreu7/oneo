@@ -41,8 +41,8 @@ export function PlayerController() {
   useEffect(() => {
     if (!player) return;
     const updated = players.find(p => p.id === player.id);
-    if (updated && updated.is_active !== player.is_active) {
-      const newPlayer = { ...player, is_active: updated.is_active };
+    if (updated && (updated.is_active !== player.is_active || updated.used_skip !== player.used_skip)) {
+      const newPlayer = { ...player, is_active: updated.is_active, used_skip: updated.used_skip };
       setPlayer(newPlayer);
       sessionStorage.setItem('player', JSON.stringify(newPlayer));
     }

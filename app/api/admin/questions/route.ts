@@ -50,7 +50,10 @@ export async function POST(req: NextRequest) {
   if (id) {
     result = await supabase.from('questions').update(payload).eq('id', id).select().single();
   } else {
-    result = await supabase.from('questions').insert(payload).select().single();
+    result = await supabase.from('questions')
+      .upsert(payload, { onConflict: 'game_id,order_index' })
+      .select()
+      .single();
   }
 
   if (result.error) return NextResponse.json({ error: result.error.message }, { status: 500 });

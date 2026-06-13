@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 import { TimerDisplay } from '@/components/admin/TimerDisplay';
 import { SKIP_AVAILABLE_FROM_INDEX } from '@/lib/types';
 import type { Question, AnswerOption } from '@/lib/types';
@@ -58,13 +59,27 @@ export function AnswerScreen({ question, timerDeadline, hasUsedSkip, onSubmit }:
         </div>
       </div>
 
-      {/* Question */}
+      {/* Question + media */}
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.08 }}
-        className="flex-1 flex flex-col justify-center py-4 px-1"
+        className="flex-1 flex flex-col justify-center gap-3 py-4 px-1"
       >
+        {question.media_type === 'image' && question.media_url && (
+          <div className="w-full rounded-xl overflow-hidden border border-app-border max-h-48">
+            <Image
+              src={question.media_url}
+              alt="מדיה"
+              width={600}
+              height={280}
+              className="w-full object-contain max-h-48"
+            />
+          </div>
+        )}
+        {question.media_type === 'audio' && question.media_url && (
+          <audio controls src={question.media_url} className="w-full" />
+        )}
         <h2 className="text-xl sm:text-2xl font-bold text-app-text text-right leading-relaxed">
           {question.question_text}
         </h2>

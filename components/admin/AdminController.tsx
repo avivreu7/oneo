@@ -50,6 +50,12 @@ export function AdminController({ gameId }: AdminControllerProps) {
   };
 
   const handleNextQuestion = () => { setRoundResult(null); api('next-question'); };
+  const handlePrevQuestion = () => { setRoundResult(null); api('prev-question'); };
+  const handleResetGame    = () => {
+    if (!window.confirm('האם לאפס את המשחק? כל התשובות יימחקו והשחקנים יחזרו ללובי.')) return;
+    setRoundResult(null);
+    api('reset-game');
+  };
 
   if (!game) return (
     <div className="flex items-center justify-center h-full">
@@ -100,7 +106,12 @@ export function AdminController({ gameId }: AdminControllerProps) {
           {game.status === 'question' && question && (
             <motion.div key="question" {...screen} className="flex flex-col gap-6 max-w-3xl mx-auto">
               <QuestionDisplay question={question} />
-              <div className="flex justify-center">
+              <div className="flex items-center justify-center gap-4 flex-wrap">
+                {game.current_question_index > 1 && (
+                  <Button onClick={handlePrevQuestion} size="lg" variant="outline" disabled={busy}>
+                    → שאלה קודמת
+                  </Button>
+                )}
                 <Button onClick={() => api('start-timer')} size="xl" variant="gold" disabled={busy}>
                   🕐 התחל ספירה לאחור
                 </Button>
@@ -186,6 +197,15 @@ export function AdminController({ gameId }: AdminControllerProps) {
                   ))}
                 </div>
               )}
+              <Button
+                onClick={handleResetGame}
+                size="xl"
+                variant="outline"
+                disabled={busy}
+                className="border-game-amber/50 text-game-amber hover:bg-game-amber/10 text-xl px-10"
+              >
+                🔄 התחל משחק מחדש
+              </Button>
             </motion.div>
           )}
 
