@@ -7,7 +7,7 @@ const MAX_SIZE = 10 * 1024 * 1024; // 10MB
 
 async function ensureBucketExists(supabase: ReturnType<typeof createAdminClient>) {
   const { data: buckets } = await supabase.storage.listBuckets();
-  const exists = buckets?.some(b => b.id === BUCKET);
+  const exists = buckets?.some((b: { id: string }) => b.id === BUCKET);
   if (!exists) {
     await supabase.storage.createBucket(BUCKET, {
       public: true,
